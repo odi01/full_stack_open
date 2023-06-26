@@ -42,18 +42,25 @@ const App = () => {
     setSelected(randomAnecdoteIndex);
   };
 
-  console.log(votes)
+  const getBiggestVote = () => {
+    const largestVotesCount = votes.indexOf(Math.max(...votes));
+    return anecdotes[largestVotesCount]
+  };
 
   return (
     <div>
-      <h1>give feedback</h1>
-      <br />
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <Button handleClick={handleVote} text="vote" />
       <Button handleClick={handleNextAnecdote} text="next anecdote" />
       <br />
       <br />
+      <h1>Anecdote with most votes</h1>
+      <p>{getBiggestVote()}</p>
+      <br />
+
+      <h1>give feedback</h1>
       <Button handleClick={() => setGood(good + 1)} text="good" />
       <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
       <Button handleClick={() => setBad(bad + 1)} text="bad" />
@@ -69,9 +76,6 @@ const App = () => {
               <Statistics text="all" value={total} />
               <Statistics text="average" value={total / 3} />
               <Statistics text="positive" value={(good / total) * 100 + "%"} />
-              {anecdotes.map((anecdote, index) => (
-                <Statistics key={index} text={anecdote} value={votes[index]} />
-              ))}
             </>
           ) : (
             <tr>
@@ -85,5 +89,3 @@ const App = () => {
 };
 
 export default App;
-
-///1.13*: anecdotes step2

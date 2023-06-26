@@ -18,7 +18,7 @@ const PartContent = (props) => {
 
 const Content = (props) => {
   return (
-    <>
+    <>ls
       <PartContent part={props.parts[0]} />
       <PartContent part={props.parts[1]} />
       <PartContent part={props.parts[2]} />
