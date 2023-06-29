@@ -15,7 +15,11 @@ const SumCalculation = (parts) => {
     .reduce((prev, curr) => prev + curr);
 };
 
-const Total = ({ parts }) => <p>Total of {SumCalculation(parts)} exercises</p>;
+const Total = ({ parts }) => (
+  <p>
+    <b>Total of {SumCalculation(parts)} exercises</b>
+  </p>
+);
 
 const Course = (course) => {
   return (
