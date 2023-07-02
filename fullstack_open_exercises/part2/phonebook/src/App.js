@@ -8,11 +8,24 @@ const App = () => {
     setNewName(event.target.value);
   };
 
+  const isPersonExist = (newPerson) => {
+    for (let i = 0; i < persons.length; i++) {
+      if (persons[i].name === newPerson.name) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
     const newPerson = { name: newName };
-    setPersons(persons.concat(newPerson));
-    setNewName(""); // Clear the input field after adding a person
+    if (!isPersonExist(newPerson)) {
+      setPersons(persons.concat(newPerson));
+      setNewName("");
+    } else {
+      alert(`${newPerson.name} is already added to the phonebook`);
+    }
   };
 
   return (
