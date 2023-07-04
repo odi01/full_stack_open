@@ -1,22 +1,11 @@
 import { useState } from "react";
 
 const App = () => {
-  const [contacts, setContact] = useState([
+  const [phonebook, setPhonebook] = useState([
     { name: "Arto Hellas", number: "054-5415482" },
   ]);
-
-  const [newContact, setNewContact] = useState("");
-
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
-
-  const [numbers, setNumbers] = useState([{ number: "054-5415482" }]);
   const [newNumber, setNewNumber] = useState("");
-
-  const handleContactFormChange = (event) => {
-    console.log(event.target);
-    setNewContact(event.target.value);
-  };
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -26,37 +15,21 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const isPersonExist = (newPerson) => {
-    for (let i = 0; i < persons.length; i++) {
-      if (persons[i].name === newPerson.name) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const isNumberExist = (newNumber) => {
-    for (let i = 0; i < numbers.length; i++) {
-      if (numbers[i].number === newNumber.number) {
-        return true;
-      }
-    }
-    return false;
+  const isEntryExist = (name, number) => {
+    return phonebook.some(
+      (entry) => entry.name === name || entry.number === number
+    );
   };
 
   const addPerson = (event) => {
     event.preventDefault();
-    const newPerson = { name: newName };
-    const newPhone = { number: newNumber };
 
-    if (isPersonExist(newPerson)) {
-      alert(`${newPerson.name} is already added to the phonebook`);
-    } else if (isNumberExist(newPhone)) {
-      alert(`${newPhone.number} is already added to the phonebook`);
+    if (isEntryExist(newName, newNumber)) {
+      alert("Entry already exists in the phonebook");
     } else {
-      setPersons(persons.concat(newPerson));
+      const newEntry = { name: newName, number: newNumber };
+      setPhonebook(phonebook.concat(newEntry));
       setNewName("");
-      setNumbers(numbers.concat(newPhone));
       setNewNumber("");
     }
   };
@@ -66,10 +39,9 @@ const App = () => {
       <h2>Phonebook</h2>
       <form>
         <div>
-          name: <input value={newContact} onChange={handleContactFormChange} />
+          name: <input value={newName} onChange={handleNameChange} />
           <br />
-          number:{" "}
-          <input value={newContact} onChange={handleContactFormChange} />
+          number: <input value={newNumber} onChange={handleNumberChange} />
         </div>
         <div>
           <button type="submit" onClick={addPerson}>
@@ -81,9 +53,11 @@ const App = () => {
       <h2>Numbers</h2>
       <table>
         <tbody>
-          {persons.map((person, index) => (
+          {phonebook.map((contact, index) => (
             <tr key={index}>
-              <td>{person.name}</td>
+              <td>
+                {contact.name} {contact.number}
+              </td>
             </tr>
           ))}
         </tbody>
