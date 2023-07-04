@@ -1,30 +1,36 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [phonebook, setPhonebook] = useState([
+    { name: "Arto Hellas", number: "054-5415482" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
 
-  const isPersonExist = (newPerson) => {
-    for (let i = 0; i < persons.length; i++) {
-      if (persons[i].name === newPerson.name) {
-        return true;
-      }
-    }
-    return false;
+  const handleNumberChange = (event) => {
+    setNewNumber(event.target.value);
+  };
+
+  const isEntryExist = (name, number) => {
+    return phonebook.some(
+      (entry) => entry.name === name || entry.number === number
+    );
   };
 
   const addPerson = (event) => {
     event.preventDefault();
-    const newPerson = { name: newName };
-    if (!isPersonExist(newPerson)) {
-      setPersons(persons.concat(newPerson));
-      setNewName("");
+
+    if (isEntryExist(newName, newNumber)) {
+      alert("Entry already exists in the phonebook");
     } else {
-      alert(`${newPerson.name} is already added to the phonebook`);
+      const newEntry = { name: newName, number: newNumber };
+      setPhonebook(phonebook.concat(newEntry));
+      setNewName("");
+      setNewNumber("");
     }
   };
 
@@ -34,6 +40,8 @@ const App = () => {
       <form>
         <div>
           name: <input value={newName} onChange={handleNameChange} />
+          <br />
+          number: <input value={newNumber} onChange={handleNumberChange} />
         </div>
         <div>
           <button type="submit" onClick={addPerson}>
@@ -45,9 +53,11 @@ const App = () => {
       <h2>Numbers</h2>
       <table>
         <tbody>
-          {persons.map((person, index) => (
+          {phonebook.map((contact, index) => (
             <tr key={index}>
-              <td>{person.name}</td>
+              <td>
+                {contact.name} {contact.number}
+              </td>
             </tr>
           ))}
         </tbody>
