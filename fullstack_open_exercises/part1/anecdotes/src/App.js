@@ -27,7 +27,7 @@ const App = () => {
 
   const handleNextAnecdote = () => {
     const randomAnecdoteIndex = Math.floor(Math.random() * anecdotes.length);
-    if (randomAnecdoteIndex !== selected) setSelected(randomAnecdoteIndex);
+    if (randomAnecdoteIndex !== selected) return randomAnecdoteIndex
   };
 
   const getBiggestVote = () => {
@@ -41,7 +41,7 @@ const App = () => {
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <Button handleClick={handleVote} text="vote" />
-      <Button handleClick={handleNextAnecdote} text="next anecdote" />
+      <Button handleClick={setSelected(handleNextAnecdote())} text="next anecdote" />
       <br />
       <br />
       <h2>Anecdote with most votes</h2>
