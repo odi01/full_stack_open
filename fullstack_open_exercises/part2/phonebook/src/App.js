@@ -1,11 +1,22 @@
 import { useState } from "react";
 
 const App = () => {
+  const [contacts, setContact] = useState([
+    { name: "Arto Hellas", number: "054-5415482" },
+  ]);
+
+  const [newContact, setNewContact] = useState("");
+
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
 
   const [numbers, setNumbers] = useState([{ number: "054-5415482" }]);
   const [newNumber, setNewNumber] = useState("");
+
+  const handleContactFormChange = (event) => {
+    console.log(event.target);
+    setNewContact(event.target.value);
+  };
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -55,9 +66,10 @@ const App = () => {
       <h2>Phonebook</h2>
       <form>
         <div>
-          name: <input value={newName} onChange={handleNameChange} />
+          name: <input value={newContact} onChange={handleContactFormChange} />
           <br />
-          number: <input value={newNumber} onChange={handleNumberChange} />
+          number:{" "}
+          <input value={newContact} onChange={handleContactFormChange} />
         </div>
         <div>
           <button type="submit" onClick={addPerson}>
