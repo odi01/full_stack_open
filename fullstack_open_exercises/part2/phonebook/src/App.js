@@ -3,19 +3,19 @@ import { useState } from "react";
 const Form = ({
   newName,
   newNumber,
-  handleNameChange,
-  handleNumberChange,
-  addPerson,
+  onNameChange,
+  onNumberChange,
+  onAddPerson,
 }) => {
   return (
     <form>
       <div>
-        name: <input value={newName} onChange={handleNameChange} />
+        name: <input value={newName} onChange={onNameChange} />
         <br />
-        number: <input value={newNumber} onChange={handleNumberChange} />
+        number: <input value={newNumber} onChange={onNumberChange} />
       </div>
       <div>
-        <button type="submit" onClick={addPerson}>
+        <button type="submit" onClick={onAddPerson}>
           add
         </button>
       </div>
@@ -23,11 +23,11 @@ const Form = ({
   );
 };
 
-const Phonebook = ({ phonebook }) => {
+const Phonebook = ({ contacts }) => {
   return (
     <table>
       <tbody>
-        {phonebook.map((contact) => (
+        {contacts.map((contact) => (
           <tr key={contact.id}>
             <td>
               {contact.name} {contact.number}
@@ -39,12 +39,12 @@ const Phonebook = ({ phonebook }) => {
   );
 };
 
-const FilterPhonebook = ({ filterKeyword, handleKeyword }) => {
+const FilterPhonebook = ({ filterKeyword, onKeywordChange }) => {
   return (
     <form>
       <div>
         filter shown with:{" "}
-        <input value={filterKeyword} onChange={handleKeyword} />
+        <input value={filterKeyword} onChange={onKeywordChange} />
       </div>
     </form>
   );
@@ -58,16 +58,16 @@ const App = () => {
     { id: 4, name: "Mary Poppendieck", number: "39-23-6423122" },
   ];
   const [phonebook, setPhonebook] = useState(initialPhonebook);
-  const [tmpFilterdPhonebook, setFilterdPhonebook] = useState(initialPhonebook);
+  const [filteredPhonebook, setFilteredPhonebook] = useState(initialPhonebook);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterKeyword, setFilterKeyword] = useState("");
 
-  const handleNameChange = (event) => {
+  const changeName = (event) => {
     setNewName(event.target.value);
   };
 
-  const handleNumberChange = (event) => {
+  const changeNumber = (event) => {
     setNewNumber(event.target.value);
   };
 
@@ -89,7 +89,7 @@ const App = () => {
       };
       const updated_phonebook = phonebook.concat(newEntry)
       setPhonebook(updated_phonebook);
-      setFilterdPhonebook(updated_phonebook)
+      setFilteredPhonebook(updated_phonebook)
       setNewName("");
       setNewNumber("");
     }
@@ -101,15 +101,15 @@ const App = () => {
     );
   };
 
-  const handleKeyword = (event) => {
+  const handleKeywordChange = (event) => {
     console.log("filter")
     const keyword = event.target.value;
     setFilterKeyword(keyword);
     const matches = filterKeywordMatch(keyword);
     if (matches.length !== 0) {
-      setFilterdPhonebook(matches);
+      setFilteredPhonebook(matches);
     } else {
-      setFilterdPhonebook([]);
+      setFilteredPhonebook([]);
     }
   };
 
@@ -118,18 +118,18 @@ const App = () => {
       <h2>Phonebook</h2>
       <FilterPhonebook
         filterKeyword={filterKeyword}
-        handleKeyword={handleKeyword}
+        onKeywordChange={handleKeywordChange}
       />
       <h2>Add a new</h2>
       <Form
         newName={newName}
         newNumber={newNumber}
-        handleNameChange={handleNameChange}
-        handleNumberChange={handleNumberChange}
-        addPerson={addPerson}
+        onNameChange={changeName}
+        onNumberChange={changeNumber}
+        onAddPerson={addPerson}
       />
       <h2>Numbers</h2>
-      <Phonebook phonebook={tmpFilterdPhonebook} />
+      <Phonebook contacts={filteredPhonebook} />
     </div>
   );
 };
