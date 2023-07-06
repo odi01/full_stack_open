@@ -39,6 +39,17 @@ const Phonebook = ({ phonebook }) => {
   );
 };
 
+const FilterPhonebook = ({ filterKeyword, handleKeyword }) => {
+  return (
+    <form>
+      <div>
+        filter shown with:{" "}
+        <input value={filterKeyword} onChange={handleKeyword} />
+      </div>
+    </form>
+  );
+};
+
 const App = () => {
   const initialPhonebook = [
     { id: 1, name: "Arto Hellas", number: "040-123456" },
@@ -47,6 +58,7 @@ const App = () => {
     { id: 4, name: "Mary Poppendieck", number: "39-23-6423122" },
   ];
   const [phonebook, setPhonebook] = useState(initialPhonebook);
+  const [tmpFilterdPhonebook, setFilterdPhonebook] = useState(initialPhonebook);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterKeyword, setFilterKeyword] = useState("");
@@ -67,49 +79,48 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
-
     if (isEntryExist(newName, newNumber)) {
       alert("Entry already exists in the phonebook");
     } else {
-      const newEntry = { name: newName, number: newNumber };
-      setPhonebook(phonebook.concat(newEntry));
+      const newEntry = {
+        id: phonebook.length + 1,
+        name: newName,
+        number: newNumber,
+      };
+      const updated_phonebook = phonebook.concat(newEntry)
+      setPhonebook(updated_phonebook);
+      setFilterdPhonebook(updated_phonebook)
       setNewName("");
       setNewNumber("");
     }
   };
 
   const filterKeywordMatch = (keyword) => {
-    return initialPhonebook.filter((contact) =>
+    return phonebook.filter((contact) =>
       contact.name.toLowerCase().includes(keyword.toLowerCase())
     );
   };
 
   const handleKeyword = (event) => {
+    console.log("filter")
     const keyword = event.target.value;
     setFilterKeyword(keyword);
-    if (keyword === "") {
-      setPhonebook(initialPhonebook);
+    const matches = filterKeywordMatch(keyword);
+    if (matches.length !== 0) {
+      setFilterdPhonebook(matches);
     } else {
-      const matches = filterKeywordMatch(keyword);
-
-      if (matches.length === 0) {
-        setPhonebook([]);
-      } else {
-        setPhonebook(matches);
-      }
+      setFilterdPhonebook([]);
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <form>
-        <div>
-          filter shown with:{" "}
-          <input value={filterKeyword} onChange={handleKeyword} />
-        </div>
-      </form>
-      <h2>Add New</h2>
+      <FilterPhonebook
+        filterKeyword={filterKeyword}
+        handleKeyword={handleKeyword}
+      />
+      <h2>Add a new</h2>
       <Form
         newName={newName}
         newNumber={newNumber}
@@ -118,7 +129,7 @@ const App = () => {
         addPerson={addPerson}
       />
       <h2>Numbers</h2>
-      <Phonebook phonebook={phonebook} />
+      <Phonebook phonebook={tmpFilterdPhonebook} />
     </div>
   );
 };
