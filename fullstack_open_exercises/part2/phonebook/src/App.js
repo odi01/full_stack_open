@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const Form = ({
   newName,
@@ -51,17 +52,20 @@ const FilterPhonebook = ({ filterKeyword, onKeywordChange }) => {
 };
 
 const App = () => {
-  const initialPhonebook = [
-    { id: 1, name: "Arto Hellas", number: "040-123456" },
-    { id: 2, name: "Ada Lovelace", number: "39-44-5323523" },
-    { id: 3, name: "Dan Abramov", number: "12-43-234345" },
-    { id: 4, name: "Mary Poppendieck", number: "39-23-6423122" },
-  ];
-  const [phonebook, setPhonebook] = useState(initialPhonebook);
-  const [filteredPhonebook, setFilteredPhonebook] = useState(initialPhonebook);
+  const [phonebook, setPhonebook] = useState([]);
+  const [filteredPhonebook, setFilteredPhonebook] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterKeyword, setFilterKeyword] = useState("");
+
+  useEffect(() => {
+    console.log("request");
+    axios.get("http://localhost:3001/persons")
+    .then((persons) => {
+      setPhonebook(persons.data);
+      setFilteredPhonebook(persons.data);
+    })
+}, [])
 
   const changeName = (event) => {
     setNewName(event.target.value);
@@ -87,9 +91,9 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      const updated_phonebook = phonebook.concat(newEntry)
+      const updated_phonebook = phonebook.concat(newEntry);
       setPhonebook(updated_phonebook);
-      setFilteredPhonebook(updated_phonebook)
+      setFilteredPhonebook(updated_phonebook);
       setNewName("");
       setNewNumber("");
     }
@@ -102,7 +106,7 @@ const App = () => {
   };
 
   const handleKeywordChange = (event) => {
-    console.log("filter")
+    console.log("filter");
     const keyword = event.target.value;
     setFilterKeyword(keyword);
     const matches = filterKeywordMatch(keyword);
