@@ -1,55 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Form from "./components/Form";
+import Phonebook from "./components/Phonebook";
+import FilterPhonebook from "./components/FilterPhonebook";
 
-const Form = ({
-  newName,
-  newNumber,
-  onNameChange,
-  onNumberChange,
-  onAddPerson,
-}) => {
-  return (
-    <form>
-      <div>
-        name: <input value={newName} onChange={onNameChange} />
-        <br />
-        number: <input value={newNumber} onChange={onNumberChange} />
-      </div>
-      <div>
-        <button type="submit" onClick={onAddPerson}>
-          add
-        </button>
-      </div>
-    </form>
-  );
-};
-
-const Phonebook = ({ contacts }) => {
-  return (
-    <table>
-      <tbody>
-        {contacts.map((contact) => (
-          <tr key={contact.id}>
-            <td>
-              {contact.name} {contact.number}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-};
-
-const FilterPhonebook = ({ filterKeyword, onKeywordChange }) => {
-  return (
-    <form>
-      <div>
-        filter shown with:{" "}
-        <input value={filterKeyword} onChange={onKeywordChange} />
-      </div>
-    </form>
-  );
-};
 
 const App = () => {
   const [phonebook, setPhonebook] = useState([]);
@@ -60,12 +14,11 @@ const App = () => {
 
   useEffect(() => {
     console.log("request");
-    axios.get("http://localhost:3001/persons")
-    .then((persons) => {
+    axios.get("http://localhost:3001/persons").then((persons) => {
       setPhonebook(persons.data);
       setFilteredPhonebook(persons.data);
-    })
-}, [])
+    });
+  }, []);
 
   const changeName = (event) => {
     setNewName(event.target.value);
