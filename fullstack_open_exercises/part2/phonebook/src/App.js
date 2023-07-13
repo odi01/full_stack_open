@@ -11,12 +11,37 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterKeyword, setFilterKeyword] = useState("");
 
-  useEffect(() => fetchContacts(), []);
+  useEffect(() => fetchPhonebook(), []);
 
-  const fetchContacts = () => {
+  const fetchPhonebook = () => {
     contactsService.getAll().then((contacts) => {
       setPhonebook(contacts);
       setFilteredPhonebook(contacts);
+    });
+  };
+
+  const createContact = (newContact) => {
+    contactsService.create(newContact).then((res) => {
+      const updated_phonebook = phonebook.concat(res);
+      setPhonebook(updated_phonebook);
+      setFilteredPhonebook(updated_phonebook);
+      setNewName("");
+      setNewNumber("");
+    });
+  };
+
+  const updateContact = (id, newObject) => {
+    contactsService.update(id, newObject).then(() => {
+      console.log(`Successfully the updated`);
+      fetchPhonebook();
+    });
+  };
+
+  const deleteContact = (id) => {
+    contactsService.remove(id).then(() => {
+      const updatedPhonebook = phonebook.filter((contact) => contact.id !== id);
+      setPhonebook(updatedPhonebook);
+      setFilteredPhonebook(updatedPhonebook);
     });
   };
 
@@ -35,14 +60,11 @@ const App = () => {
   };
 
   const updatePhoneNumber = (name, newPhoneNumber) => {
-    const originalObject = phonebook.filter(
+    const [originalObject] = phonebook.filter(
       (contact) => contact.name.toLowerCase() === name.toLowerCase()
-    )[0];
+    );
     const modifiedObject = { ...originalObject, number: newPhoneNumber };
-    contactsService.update(originalObject.id, modifiedObject).then(() => {
-      console.log(`Successfull the updated new phone number`);
-      fetchContacts();
-    });
+    updateContact(originalObject.id, modifiedObject);
   };
 
   const addContact = (event) => {
@@ -55,7 +77,12 @@ const App = () => {
         updatePhoneNumber(newName, newNumber);
       }
     } else {
-      handleNonExistContact();
+      const newEntry = {
+        name: newName,
+        number: newNumber,
+        id: phonebook.length + 1,
+      };
+      createContact(newEntry);
     }
   };
 
@@ -63,21 +90,6 @@ const App = () => {
     return phonebook.filter((contact) =>
       contact.name.toLowerCase().includes(keyword.toLowerCase())
     );
-  };
-
-  const handleNonExistContact = () => {
-    const newEntry = {
-      name: newName,
-      number: newNumber,
-      id: phonebook.length + 1,
-    };
-    contactsService.create(newEntry).then((res) => {
-      const updated_phonebook = phonebook.concat(res);
-      setPhonebook(updated_phonebook);
-      setFilteredPhonebook(updated_phonebook);
-      setNewName("");
-      setNewNumber("");
-    });
   };
 
   const handleKeywordChange = (event) => {
@@ -89,14 +101,6 @@ const App = () => {
     } else {
       setFilteredPhonebook([]);
     }
-  };
-
-  const deleteContact = (id) => {
-    contactsService.remove(id).then(() => {
-      const updatedPhonebook = phonebook.filter((contact) => contact.id !== id);
-      setPhonebook(updatedPhonebook);
-      setFilteredPhonebook(updatedPhonebook);
-    });
   };
 
   return (
