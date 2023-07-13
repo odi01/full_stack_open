@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Form from "./components/Form";
 import Phonebook from "./components/Phonebook";
 import FilterPhonebook from "./components/FilterPhonebook";
-
+import contactsService from "./services/contacts";
 
 const App = () => {
   const [phonebook, setPhonebook] = useState([]);
@@ -12,13 +11,39 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterKeyword, setFilterKeyword] = useState("");
 
-  useEffect(() => {
-    console.log("request");
-    axios.get("http://localhost:3001/persons").then((persons) => {
-      setPhonebook(persons.data);
-      setFilteredPhonebook(persons.data);
+  useEffect(() => fetchPhonebook(), []);
+
+  const fetchPhonebook = () => {
+    contactsService.getAll().then((contacts) => {
+      setPhonebook(contacts);
+      setFilteredPhonebook(contacts);
     });
-  }, []);
+  };
+
+  const createContact = (newContact) => {
+    contactsService.create(newContact).then((res) => {
+      const updated_phonebook = phonebook.concat(res);
+      setPhonebook(updated_phonebook);
+      setFilteredPhonebook(updated_phonebook);
+      setNewName("");
+      setNewNumber("");
+    });
+  };
+
+  const updateContact = (id, newObject) => {
+    contactsService.update(id, newObject).then(() => {
+      console.log(`Successfully the updated`);
+      fetchPhonebook();
+    });
+  };
+
+  const deleteContact = (id) => {
+    contactsService.remove(id).then(() => {
+      const updatedPhonebook = phonebook.filter((contact) => contact.id !== id);
+      setPhonebook(updatedPhonebook);
+      setFilteredPhonebook(updatedPhonebook);
+    });
+  };
 
   const changeName = (event) => {
     setNewName(event.target.value);
@@ -28,27 +53,38 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const isEntryExist = (name, number) => {
+  const updatePhoneNumber = (name, newPhoneNumber) => {
+    const [originalObject] = phonebook.filter(
+      (contact) => contact.name.toLowerCase() === name.toLowerCase()
+    );
+    const modifiedObject = { ...originalObject, number: newPhoneNumber };
+    updateContact(originalObject.id, modifiedObject);
+  };
+
+  const isContactNameExist = (name) => {
     return phonebook.some(
-      (entry) => entry.name === name || entry.number === number
+      (entry) => entry.name.toLowerCase() === name.toLowerCase()
     );
   };
 
-  const addPerson = (event) => {
+  const isUpdateNumberApproved = () =>
+    window.confirm(
+      `${newName} is already added to phonebook, replace the old number with a new one?`
+    );
+
+  const addContact = (event) => {
     event.preventDefault();
-    if (isEntryExist(newName, newNumber)) {
-      alert("Entry already exists in the phonebook");
+    if (isContactNameExist(newName)) {
+      if (isUpdateNumberApproved()) {
+        updatePhoneNumber(newName, newNumber);
+      }
     } else {
       const newEntry = {
-        id: phonebook.length + 1,
         name: newName,
         number: newNumber,
+        id: phonebook.length + 1,
       };
-      const updated_phonebook = phonebook.concat(newEntry);
-      setPhonebook(updated_phonebook);
-      setFilteredPhonebook(updated_phonebook);
-      setNewName("");
-      setNewNumber("");
+      createContact(newEntry);
     }
   };
 
@@ -59,7 +95,6 @@ const App = () => {
   };
 
   const handleKeywordChange = (event) => {
-    console.log("filter");
     const keyword = event.target.value;
     setFilterKeyword(keyword);
     const matches = filterKeywordMatch(keyword);
@@ -83,10 +118,10 @@ const App = () => {
         newNumber={newNumber}
         onNameChange={changeName}
         onNumberChange={changeNumber}
-        onAddPerson={addPerson}
+        onAddContact={addContact}
       />
       <h2>Numbers</h2>
-      <Phonebook contacts={filteredPhonebook} />
+      <Phonebook contacts={filteredPhonebook} onDeleteContact={deleteContact} />
     </div>
   );
 };
