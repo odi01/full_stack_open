@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3001/persons";
+const baseUrl = "http://localhost:3001/contacts";
 
 const getAll = () => {
   const request = axios.get(baseUrl);
@@ -18,10 +18,19 @@ const remove = (id) => {
     .catch((err) => console.log(`Failed to delete contact, exp: ${err}`));
 };
 
+const update = (id, newObject) => {
+  const req = axios.put(`${baseUrl}/${id}`, newObject)
+  return req
+  .then((res) => res.data)
+  .catch((err) => console.log(`Failed to update the object, exp: ${err}`))
+}
+
+
 const exportedObject = {
   getAll,
   create,
   remove,
+  update
 };
 
 export default exportedObject;

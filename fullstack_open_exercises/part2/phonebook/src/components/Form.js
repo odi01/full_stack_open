@@ -3,7 +3,7 @@ const Form = ({
   newNumber,
   onNameChange,
   onNumberChange,
-  onAddPerson,
+  onAddContact,
 }) => {
   return (
     <form>
@@ -13,7 +13,7 @@ const Form = ({
         number: <input value={newNumber} onChange={onNumberChange} />
       </div>
       <div>
-        <button type="submit" onClick={onAddPerson}>
+        <button type="submit" onClick={onAddContact}>
           add
         </button>
       </div>
