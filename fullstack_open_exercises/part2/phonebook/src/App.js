@@ -53,12 +53,6 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
-  const isContactNameExist = (name) => {
-    return phonebook.some(
-      (entry) => entry.name.toLowerCase() === name.toLowerCase()
-    );
-  };
-
   const updatePhoneNumber = (name, newPhoneNumber) => {
     const [originalObject] = phonebook.filter(
       (contact) => contact.name.toLowerCase() === name.toLowerCase()
@@ -67,13 +61,21 @@ const App = () => {
     updateContact(originalObject.id, modifiedObject);
   };
 
+  const isContactNameExist = (name) => {
+    return phonebook.some(
+      (entry) => entry.name.toLowerCase() === name.toLowerCase()
+    );
+  };
+
+  const isUpdateNumberApproved = () =>
+    window.confirm(
+      `${newName} is already added to phonebook, replace the old number with a new one?`
+    );
+
   const addContact = (event) => {
     event.preventDefault();
     if (isContactNameExist(newName)) {
-      const isUpdateContact = window.confirm(
-        `${newName} is already added to phonebook, replace the old number with a new one?`
-      );
-      if (isUpdateContact) {
+      if (isUpdateNumberApproved()) {
         updatePhoneNumber(newName, newNumber);
       }
     } else {
