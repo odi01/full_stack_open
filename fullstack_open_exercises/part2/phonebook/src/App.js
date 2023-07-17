@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import Form from "./components/Form";
 import Phonebook from "./components/Phonebook";
 import FilterPhonebook from "./components/FilterPhonebook";
-import SuccessMessageBox from "./components/SuccessMessageBox";
+import {
+  SuccessAlertMessage,
+  FailureAlertMessage,
+} from "./components/AlertMessages";
 import contactsService from "./services/contacts";
 
 const App = () => {
@@ -14,23 +17,24 @@ const App = () => {
 
   const [filterKeyword, setFilterKeyword] = useState("");
 
-  const [successMessage, setSuccessMessage] = useState()
+  const [successMessage, setSuccessMessage] = useState();
+  const [failureMessage, setFailureMessage] = useState();
   const [showAlert, setShowAlert] = useState(false);
-
 
   useEffect(() => fetchPhonebook(), []);
 
   useEffect(() => {
-    if (successMessage) {
+    if (successMessage || failureMessage) {
       setShowAlert(true);
       const timeout = setTimeout(() => {
         setShowAlert(false);
         setSuccessMessage();
+        setFailureMessage()
       }, 3000);
 
       return () => clearTimeout(timeout);
     }
-  }, [successMessage]);
+  }, [successMessage, failureMessage]);
 
   const fetchPhonebook = () => {
     contactsService.getAll().then((contacts) => {
@@ -50,10 +54,13 @@ const App = () => {
   };
 
   const updateContact = (id, newObject) => {
-    contactsService.update(id, newObject).then(() => {
-      console.log(`Successfully the updated`);
+    contactsService
+      .update(id, newObject)
+      .then(() => {
+        setSuccessMessage(newObject.name)
+      })
+      .catch(() => setFailureMessage(newObject.name))
       fetchPhonebook();
-    });
   };
 
   const deleteContact = (id) => {
@@ -103,9 +110,9 @@ const App = () => {
         number: newNumber,
         id: phonebook.length + 1,
       };
-      createContact(newEntry);
+      createContact(newEntry)
+      setSuccessMessage(newName);
     }
-    setSuccessMessage(newName)
   };
 
   const filterKeywordMatch = (keyword) => {
@@ -128,10 +135,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <SuccessMessageBox 
-      message={successMessage}
-      showAlert={showAlert}
-      />
+      <SuccessAlertMessage message={successMessage} showAlert={showAlert} />
+      <FailureAlertMessage name={failureMessage} showAlert={showAlert} />
       <FilterPhonebook
         filterKeyword={filterKeyword}
         onKeywordChange={handleKeywordChange}

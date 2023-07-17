@@ -22,9 +22,8 @@ const update = (id, newObject) => {
   const req = axios.put(`${baseUrl}/${id}`, newObject)
   return req
   .then((res) => res.data)
-  .catch((err) => console.log(`Failed to update the object, exp: ${err}`))
+  // .catch((err) => console.log(`Failed to update the object, exp: ${err}`))
 }
-
 
 const exportedObject = {
   getAll,
