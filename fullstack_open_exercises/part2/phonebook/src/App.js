@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Form from "./components/Form";
 import Phonebook from "./components/Phonebook";
 import FilterPhonebook from "./components/FilterPhonebook";
-import SuccessMessageBox from "./components/MessagesStyle";
+import SuccessMessageBox from "./components/SuccessMessageBox";
 import contactsService from "./services/contacts";
 
 const App = () => {
@@ -15,9 +15,22 @@ const App = () => {
   const [filterKeyword, setFilterKeyword] = useState("");
 
   const [successMessage, setSuccessMessage] = useState()
+  const [showAlert, setShowAlert] = useState(false);
 
 
   useEffect(() => fetchPhonebook(), []);
+
+  useEffect(() => {
+    if (successMessage) {
+      setShowAlert(true);
+      const timeout = setTimeout(() => {
+        setShowAlert(false);
+        setSuccessMessage();
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [successMessage]);
 
   const fetchPhonebook = () => {
     contactsService.getAll().then((contacts) => {
@@ -91,8 +104,8 @@ const App = () => {
         id: phonebook.length + 1,
       };
       createContact(newEntry);
-      setSuccessMessage(newName)
     }
+    setSuccessMessage(newName)
   };
 
   const filterKeywordMatch = (keyword) => {
@@ -115,7 +128,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <SuccessMessageBox message={successMessage}/>
+      <SuccessMessageBox 
+      message={successMessage}
+      showAlert={showAlert}
+      />
       <FilterPhonebook
         filterKeyword={filterKeyword}
         onKeywordChange={handleKeywordChange}

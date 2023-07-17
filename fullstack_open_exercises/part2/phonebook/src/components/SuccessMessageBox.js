@@ -1,4 +1,4 @@
-const SuccessMessageBox = ({ message }) => {
+const SuccessMessageBox = ({ message, showAlert }) => {
   const successBoxStyle = {
     color: "green",
     background: "lightgrey",
@@ -9,7 +9,7 @@ const SuccessMessageBox = ({ message }) => {
     marginBottom: 10,
   };
 
-  if (message === undefined) {
+  if (message === undefined || !showAlert) {
     return undefined;
   }
 
