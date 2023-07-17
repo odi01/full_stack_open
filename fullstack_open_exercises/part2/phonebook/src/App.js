@@ -2,16 +2,39 @@ import { useState, useEffect } from "react";
 import Form from "./components/Form";
 import Phonebook from "./components/Phonebook";
 import FilterPhonebook from "./components/FilterPhonebook";
+import {
+  SuccessAlertMessage,
+  FailureAlertMessage,
+} from "./components/AlertMessages";
 import contactsService from "./services/contacts";
 
 const App = () => {
   const [phonebook, setPhonebook] = useState([]);
   const [filteredPhonebook, setFilteredPhonebook] = useState([]);
+
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+
   const [filterKeyword, setFilterKeyword] = useState("");
 
+  const [successMessage, setSuccessMessage] = useState();
+  const [failureMessage, setFailureMessage] = useState();
+  const [showAlert, setShowAlert] = useState(false);
+
   useEffect(() => fetchPhonebook(), []);
+
+  useEffect(() => {
+    if (successMessage || failureMessage) {
+      setShowAlert(true);
+      const timeout = setTimeout(() => {
+        setShowAlert(false);
+        setSuccessMessage();
+        setFailureMessage()
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [successMessage, failureMessage]);
 
   const fetchPhonebook = () => {
     contactsService.getAll().then((contacts) => {
@@ -31,10 +54,13 @@ const App = () => {
   };
 
   const updateContact = (id, newObject) => {
-    contactsService.update(id, newObject).then(() => {
-      console.log(`Successfully the updated`);
+    contactsService
+      .update(id, newObject)
+      .then(() => {
+        setSuccessMessage(newObject.name)
+      })
+      .catch(() => setFailureMessage(newObject.name))
       fetchPhonebook();
-    });
   };
 
   const deleteContact = (id) => {
@@ -84,7 +110,8 @@ const App = () => {
         number: newNumber,
         id: phonebook.length + 1,
       };
-      createContact(newEntry);
+      createContact(newEntry)
+      setSuccessMessage(newName);
     }
   };
 
@@ -108,6 +135,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessAlertMessage message={successMessage} showAlert={showAlert} />
+      <FailureAlertMessage name={failureMessage} showAlert={showAlert} />
       <FilterPhonebook
         filterKeyword={filterKeyword}
         onKeywordChange={handleKeywordChange}
