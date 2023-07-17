@@ -2,14 +2,20 @@ import { useState, useEffect } from "react";
 import Form from "./components/Form";
 import Phonebook from "./components/Phonebook";
 import FilterPhonebook from "./components/FilterPhonebook";
+import SuccessMessageBox from "./components/MessagesStyle";
 import contactsService from "./services/contacts";
 
 const App = () => {
   const [phonebook, setPhonebook] = useState([]);
   const [filteredPhonebook, setFilteredPhonebook] = useState([]);
+
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+
   const [filterKeyword, setFilterKeyword] = useState("");
+
+  const [successMessage, setSuccessMessage] = useState()
+
 
   useEffect(() => fetchPhonebook(), []);
 
@@ -85,6 +91,7 @@ const App = () => {
         id: phonebook.length + 1,
       };
       createContact(newEntry);
+      setSuccessMessage(newName)
     }
   };
 
@@ -108,6 +115,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessMessageBox message={successMessage}/>
       <FilterPhonebook
         filterKeyword={filterKeyword}
         onKeywordChange={handleKeywordChange}
