@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 
 const MatchCountriesTable = ({ matchCountries }) => {
   const [singleCountryData, setSingleCountryData] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   const multipleMatchesTable = () => {
     return (
@@ -11,6 +12,11 @@ const MatchCountriesTable = ({ matchCountries }) => {
           {matchCountries.map((country) => (
             <tr key={country.name.common}>
               <td>{country.name.common}</td>
+              <td>
+                <button onClick={() => handleButtonClick(country.name.common)}>
+                  Show
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -32,22 +38,31 @@ const MatchCountriesTable = ({ matchCountries }) => {
       });
   };
 
+  const displaySingleCountry = (countryName) => {
+    getSingleCountryData(countryName).then((countryData) => {
+      setSingleCountryData(countryData);
+    });
+  };
+
+  const handleButtonClick = (countryName) => {
+    setSelectedCountry(countryName);
+    displaySingleCountry(countryName);
+  };
+
   useEffect(() => {
-    if (matchCountries.length === 1) {
+    if (matchCountries.length === 1 && !selectedCountry) {
       const countryName = matchCountries[0].name.common;
-      getSingleCountryData(countryName).then((countryData) => {
-        setSingleCountryData(countryData);
-      });
+      displaySingleCountry(countryName);
     } else {
       setSingleCountryData(null);
     }
-  }, [matchCountries]);
+  }, [matchCountries, selectedCountry]);
 
   const createCountryProfile = (country) => {
     return (
       <div>
         <h1>{country.name}</h1>
-        <p>Capital: {country.capital}</p> {/* "capital" instead of "captial" */}
+        <p>Capital: {country.capital}</p>
         <p>Area: {country.area}</p>
         <h3>Languages</h3>
         <ul>
@@ -65,11 +80,8 @@ const MatchCountriesTable = ({ matchCountries }) => {
     if (matchCountries) {
       if (matchCountries.length > 10) {
         return tooManyMatchesMsg();
-      } else if (matchCountries.length === 1) {
-        if (singleCountryData) {
+      } else if (matchCountries.length === 1 || singleCountryData) {
           return createCountryProfile(singleCountryData);
-        }
-        return <p>Loading...</p>;
       } else {
         return multipleMatchesTable();
       }
