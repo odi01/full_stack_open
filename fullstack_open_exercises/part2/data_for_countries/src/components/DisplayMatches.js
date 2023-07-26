@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 const MatchCountriesTable = ({ matchCountries }) => {
   const [singleCountryData, setSingleCountryData] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const multipleMatchesTable = () => {
     return (
@@ -49,6 +51,22 @@ const MatchCountriesTable = ({ matchCountries }) => {
     displaySingleCountry(countryName);
   };
 
+  const getWeather = async (city) => {
+    const api_key = process.env.REACT_APP_NINJAS_API_KEY;
+    try {
+      const res = await axios.get(
+        `https://api.api-ninjas.com/v1/weather?city=${city}`,
+        {
+          headers: { "X-Api-Key": api_key },
+        }
+      );
+      return res.data;
+    } catch (res_1) {
+      console.log("Failed to get weather data, reason:", res_1);
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (matchCountries.length === 1) {
       const countryName = matchCountries[0].name.common;
@@ -56,7 +74,31 @@ const MatchCountriesTable = ({ matchCountries }) => {
     } else {
       setSingleCountryData(null);
     }
-  }, [matchCountries, selectedCountry]);
+  }, [matchCountries]);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      displaySingleCountry(selectedCountry);
+    }
+  }, [selectedCountry]);
+
+  useEffect(() => {
+    if (singleCountryData) {
+      setLoading(true);
+      getWeather(singleCountryData.capital)
+        .then((cityWeatherData) => {
+          console.log("cityWeatherData:", cityWeatherData); // Log the entire object
+          if (cityWeatherData) {
+            setWeatherData(cityWeatherData);
+          } else {
+            console.log("Weather data not available.");
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [singleCountryData]);
 
   const createCountryProfile = (country) => {
     if (!country) {
@@ -75,6 +117,18 @@ const MatchCountriesTable = ({ matchCountries }) => {
         </ul>
         <br />
         <img src={country.flags.png} alt={country.flags.alt} />
+        <br />
+        {loading ? (
+          <p>Loading weather data...</p>
+        ) : (
+          weatherData && (
+            <div>
+              <h3>Weather in {singleCountryData.capital}</h3>
+              <p>Temperature: {weatherData.temp} °C</p>
+              <p>Wind Speed: {weatherData.wind_speed} km</p>
+            </div>
+          )
+        )}
       </div>
     );
   };

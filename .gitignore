@@ -6,3 +6,4 @@
 /.vscode
 /fullstack_open_exercises/part2/data_for_countries/node_modules
 /fullstack_open_exercises/part2/data_for_countries/public
+/fullstack_open_exercises/part2/data_for_countries/.env
