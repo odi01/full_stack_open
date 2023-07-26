@@ -50,7 +50,7 @@ const MatchCountriesTable = ({ matchCountries }) => {
   };
 
   useEffect(() => {
-    if (matchCountries.length === 1 && !selectedCountry) {
+    if (matchCountries.length === 1) {
       const countryName = matchCountries[0].name.common;
       displaySingleCountry(countryName);
     } else {
@@ -59,6 +59,9 @@ const MatchCountriesTable = ({ matchCountries }) => {
   }, [matchCountries, selectedCountry]);
 
   const createCountryProfile = (country) => {
+    if (!country) {
+      return <p>No country data available.</p>;
+    }
     return (
       <div>
         <h1>{country.name}</h1>
@@ -81,7 +84,7 @@ const MatchCountriesTable = ({ matchCountries }) => {
       if (matchCountries.length > 10) {
         return tooManyMatchesMsg();
       } else if (matchCountries.length === 1 || singleCountryData) {
-          return createCountryProfile(singleCountryData);
+        return createCountryProfile(singleCountryData);
       } else {
         return multipleMatchesTable();
       }
