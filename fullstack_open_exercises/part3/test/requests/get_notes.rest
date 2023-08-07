@@ -1,0 +1,7 @@
+## Get all notes
+GET http://localhost:3001/api/notes
+
+
+### 
+## Get single note by id
+GET http://localhost:3001/api/notes/2
