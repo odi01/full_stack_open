@@ -4,7 +4,7 @@ import Phonebook from "./components/Phonebook";
 import FilterPhonebook from "./components/FilterPhonebook";
 import {
   SuccessAlertMessage,
-  FailureAlertMessage,
+  FailureAlertMsg,
 } from "./components/AlertMessages";
 import contactsService from "./services/contacts";
 
@@ -29,7 +29,7 @@ const App = () => {
       const timeout = setTimeout(() => {
         setShowAlert(false);
         setSuccessMessage();
-        setFailureMessage()
+        setFailureMessage();
       }, 3000);
 
       return () => clearTimeout(timeout);
@@ -44,23 +44,30 @@ const App = () => {
   };
 
   const createContact = (newContact) => {
-    contactsService.create(newContact).then((res) => {
-      const updated_phonebook = phonebook.concat(res);
-      setPhonebook(updated_phonebook);
-      setFilteredPhonebook(updated_phonebook);
-      setNewName("");
-      setNewNumber("");
-    });
+    contactsService
+      .create(newContact)
+      .then((res) => {
+        fetchPhonebook();
+        setNewName("");
+        setNewNumber("");
+        setSuccessMessage(newContact.name);
+      })
+      .catch((res) => {
+        setFailureMessage(res.response.data.error);
+      });
   };
 
   const updateContact = (id, newObject) => {
     contactsService
       .update(id, newObject)
       .then(() => {
-        setSuccessMessage(newObject.name)
+        setSuccessMessage(newObject.name);
       })
-      .catch(() => setFailureMessage(newObject.name))
-      fetchPhonebook();
+      .catch(() => {
+        let errMsg = `Information of ${newObject.name} has already been removed from server`;
+        setFailureMessage(errMsg);
+      });
+    fetchPhonebook();
   };
 
   const deleteContact = (id) => {
@@ -110,8 +117,7 @@ const App = () => {
         number: newNumber,
         id: phonebook.length + 1,
       };
-      createContact(newEntry)
-      setSuccessMessage(newName);
+      createContact(newEntry);
     }
   };
 
@@ -136,7 +142,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <SuccessAlertMessage message={successMessage} showAlert={showAlert} />
-      <FailureAlertMessage name={failureMessage} showAlert={showAlert} />
+      <FailureAlertMsg msg={failureMessage} showAlert={showAlert} />
       <FilterPhonebook
         filterKeyword={filterKeyword}
         onKeywordChange={handleKeywordChange}

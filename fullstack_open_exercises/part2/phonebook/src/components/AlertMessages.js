@@ -8,7 +8,8 @@ export const SuccessAlertMessage = ({ message, showAlert }) => {
     padding: 10,
     marginBottom: 10,
   };
-
+  console.log("succes msg value", message);
+  console.log("succes showalert", showAlert);
   if (message === undefined || !showAlert) {
     return undefined;
   }
@@ -16,8 +17,7 @@ export const SuccessAlertMessage = ({ message, showAlert }) => {
   return <div style={successBoxStyle}> Added: {message}</div>;
 };
 
-
-export const FailureAlertMessage = ({ name, showAlert }) => {
+export const FailureAlertMsg = ({ msg, showAlert }) => {
   const failureBoxStyle = {
     color: "red",
     background: "lightgrey",
@@ -28,10 +28,9 @@ export const FailureAlertMessage = ({ name, showAlert }) => {
     marginBottom: 10,
   };
 
-  if (name === undefined || !showAlert) {
+  if (msg === undefined || !showAlert) {
     return undefined;
   }
 
-  return <div style={failureBoxStyle}> Information of {name} has already been removed from server </div>;
-
-}
+  return <div style={failureBoxStyle}> {msg} </div>;
+};
