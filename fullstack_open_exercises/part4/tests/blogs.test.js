@@ -19,7 +19,7 @@ const listWithMutipleBlogs = [
         title: 'Go To Statement Considered Harmful',
         author: 'Willam Jason',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-        likes: 6,
+        likes: 1,
         __v: 0,
     },
     {
@@ -35,7 +35,7 @@ const listWithMutipleBlogs = [
         title: 'Go To Statement Considered Harmful',
         author: 'Willam Jason',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-        likes: 8,
+        likes: 5,
         __v: 0,
     },
     {
@@ -52,6 +52,14 @@ const listWithMutipleBlogs = [
         author: 'June Flask',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
         likes: 2,
+        __v: 0,
+    },
+    {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Bla Bla Bla',
+        author: 'June Flask',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 12,
         __v: 0,
     },
 ]
@@ -102,6 +110,15 @@ test('most blogs author', () => {
     const expRes = {
         author: 'Willam Jason',
         blogs: 3,
+    }
+    expect(result).toEqual(expRes)
+})
+
+test.only('author with most likes', () => {
+    const result = listHelper.mostLikes(listWithMutipleBlogs)
+    const expRes = {
+        author: 'June Flask',
+        blogs: 14,
     }
     expect(result).toEqual(expRes)
 })

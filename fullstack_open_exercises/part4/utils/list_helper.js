@@ -52,8 +52,26 @@ const mostBlogs = (blogs) => {
     return frequency
 }
 
+const mostLikes = (blogs) => {
+	let authorLikesObj = blogs.reduce((op, { author, likes }) => {
+		op[author] = op[author] || 0;
+		op[author] += likes;
+		return op;
+	}, {});
+
+	const mostLikedAuthor = Object.keys(authorLikesObj).reduce((a, b) =>
+		authorLikesObj[a] > authorLikesObj[b] ? a : b
+	);
+
+	return {
+		author: mostLikedAuthor,
+		blogs: authorLikesObj[mostLikedAuthor],
+	};
+};
+
 module.exports = {
     totalLikes,
     favoriteBlog,
     mostBlogs,
+    mostLikes,
 }
