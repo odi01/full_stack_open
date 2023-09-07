@@ -41,7 +41,6 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-    // eslint-disable-next-line lodash/prefer-lodash-method
     const blogAuthors = blogs.map((blog) => blog.author)
     const frequency = _.maxBy(
         _.map(_.groupBy(blogAuthors), (author) => ({
@@ -50,11 +49,10 @@ const mostBlogs = (blogs) => {
         })),
         'blogs',
     );
-    console.log(frequency);
     return frequency
 }
 
-export default {
+module.exports = {
     totalLikes,
     favoriteBlog,
     mostBlogs,

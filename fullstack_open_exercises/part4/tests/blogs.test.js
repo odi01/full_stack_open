@@ -1,4 +1,4 @@
-const listHelper = require('../utils/list_helper').default
+const listHelper = require('../utils/list_helper')
 
 const listWithoutBlog = []
 
@@ -17,7 +17,7 @@ const listWithMutipleBlogs = [
     {
         _id: '5a422aa71b54a676234d17f8',
         title: 'Go To Statement Considered Harmful',
-        author: 'Edsger W. Dijkstra',
+        author: 'Willam Jason',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
         likes: 6,
         __v: 0,
@@ -25,9 +25,17 @@ const listWithMutipleBlogs = [
     {
         _id: '5a422aa71b54a676234d17f8',
         title: 'Go To Statement Considered Harmful',
-        author: 'Edsger W. Dijkstra',
+        author: 'Willam Jason',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
         likes: 3,
+        __v: 0,
+    },
+    {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Willam Jason',
+        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 8,
         __v: 0,
     },
     {
@@ -89,11 +97,11 @@ describe('most liked blog', () => {
     })
 })
 
-test.only('most blogs author', () => {
+test('most blogs author', () => {
     const result = listHelper.mostBlogs(listWithMutipleBlogs)
     const expRes = {
-        author: 'Edsger W. Dijkstra',
-        blogs: 2,
+        author: 'Willam Jason',
+        blogs: 3,
     }
-    expect(result.likes).toEqual(expRes)
+    expect(result).toEqual(expRes)
 })
