@@ -1,4 +1,4 @@
-const dummy = (blogs) => 1
+const _ = require('lodash')
 
 const totalLikes = (blogs) => {
     let total = 0
@@ -40,8 +40,22 @@ const favoriteBlog = (blogs) => {
     }
 }
 
-module.exports = {
-    dummy,
+const mostBlogs = (blogs) => {
+    // eslint-disable-next-line lodash/prefer-lodash-method
+    const blogAuthors = blogs.map((blog) => blog.author)
+    const frequency = _.maxBy(
+        _.map(_.groupBy(blogAuthors), (author) => ({
+            author: author[0],
+            blogs: author.length,
+        })),
+        'blogs',
+    );
+    console.log(frequency);
+    return frequency
+}
+
+export default {
     totalLikes,
     favoriteBlog,
+    mostBlogs,
 }

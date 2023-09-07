@@ -5,7 +5,7 @@ module.exports = {
         es2021: true,
         jest: true,
     },
-    extends: 'airbnb-base',
+    extends: ['airbnb-base', 'plugin:lodash/canonical'],
     overrides: [
         {
             env: {
@@ -27,5 +27,8 @@ module.exports = {
         'no-console': 0,
         indent: ['error', 4],
         'no-plusplus': 0,
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+
     },
+    plugins: ['lodash'],
 };
