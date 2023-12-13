@@ -2,7 +2,7 @@ const Blog = require('../models/blog')
 
 const initialBlogss = [
     {
-        _id: '5a422aa71b54a676234d17f8',
+        _id: '64edbb496c68048865620140',
         title: 'Go To Statement Considered Harmful',
         author: 'Willam Jason',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
@@ -10,8 +10,7 @@ const initialBlogss = [
         __v: 0,
     },
     {
-        _id: '5a422aa71b54a676234d17f8',
-        title: 'Go To Statement Considered Harmful',
+        title: 'Is today is going to be a good night',
         author: 'Dori Moran',
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
         likes: 2,
