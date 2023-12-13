@@ -1,22 +1,30 @@
-const Blog = require('../models/blog')
+const Blog = require("../models/blog");
 
 const initialBlogss = [
-    {
-        _id: '64edbb496c68048865620140',
-        title: 'Go To Statement Considered Harmful',
-        author: 'Willam Jason',
-        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-        likes: 1,
-        __v: 0,
-    },
-    {
-        title: 'Is today is going to be a good night',
-        author: 'Dori Moran',
-        url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-        likes: 2,
-        __v: 0,
-    },
-]
+	{
+		_id: "64edbb496c68048865620140",
+		title: "Go To Statement Considered Harmful",
+		author: "Willam Jason",
+		url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+		likes: 1,
+		__v: 0,
+	},
+	{
+		_id: "65794f07d1db772e8e2d9eb0",
+		title: "Is today is going to be a good night",
+		author: "Dori Moran",
+		url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+		likes: 2,
+		__v: 0,
+	},
+];
+
+const newBlog = {
+	title: "Farting in the dark is good",
+	author: "Michal Ribinzon",
+	url: "http://www.nothing-there.com",
+	likes: 69,
+};
 
 // const nonExistingId = async () => {
 //   const note = new Note({ content: 'willremovethissoon' })
@@ -32,8 +40,9 @@ const initialBlogss = [
 // }
 
 module.exports = {
-    initialBlogss
-}
+	initialBlogss,
+	newBlog,
+};
 
 // module.exports = {
 //     initialBlogss, nonExistingId, notesInDb

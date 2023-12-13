@@ -29,8 +29,15 @@ test("Verifies blog id property", async () => {
 	const blogs = response.body;
 
 	blogs.forEach((blog) => {
-		expect(blog.id).toBeDefined();
+		expect(blog._id).toBeDefined();
 	});
+});
+
+test("Create new post", async () => {
+	const preInsertBlogs = await api.get("/api/blogs");
+	await api.post("/api/blogs", helper.newBlog).expect(201);
+	const postInsertBlogs = await api.get("/api/blogs");
+	expect(postInsertBlogs.body).toHaveLength(preInsertBlogs.body.length + 1);
 });
 
 afterAll(async () => {
