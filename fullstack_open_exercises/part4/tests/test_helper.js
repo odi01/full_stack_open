@@ -26,6 +26,12 @@ const newBlog = {
 	likes: 69
 };
 
+const missingLikesBlog = {
+	title: "In the begaining I didn't have a like prop",
+	author: "Bro Mo",
+	url: "http://www.not22hing-there.com",
+};
+
 // const nonExistingId = async () => {
 //   const note = new Note({ content: 'willremovethissoon' })
 //   await note.save()
@@ -42,6 +48,7 @@ const newBlog = {
 module.exports = {
 	initialBlogss,
 	newBlog,
+	missingLikesBlog
 };
 
 // module.exports = {
