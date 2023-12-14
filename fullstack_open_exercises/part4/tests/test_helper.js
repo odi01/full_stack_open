@@ -23,7 +23,7 @@ const newBlog = {
 	title: "Farting in the dark is good",
 	author: "Michal Ribinzon",
 	url: "http://www.nothing-there.com",
-	likes: 69,
+	likes: 69
 };
 
 // const nonExistingId = async () => {

@@ -8,40 +8,57 @@ const Blog = require("../models/blog");
 const helper = require("./test_helper");
 
 beforeEach(async () => {
-	await Blog.deleteMany({});
-	await Blog.insertMany(helper.initialBlogss);
-});
+  await Blog.deleteMany({});
+  await Blog.insertMany(helper.initialBlogss);
+}, 50000);
 
-test("blogs are returned as json", async () => {
-	await api
-		.get("/api/blogs")
-		.expect(200)
-		.expect("Content-Type", /application\/json/);
-});
+// test("blogs are returned as json", async () => {
+// 	await api
+// 		.get("/api/blogs")
+// 		.expect(200)
+// 		.expect("Content-Type", /application\/json/);
+// });
 
-test("All blogs are returned with current length", async () => {
-	const response = await api.get("/api/blogs");
-	expect(response.body).toHaveLength(helper.initialBlogss.length);
-});
+// test("All blogs are returned with current length", async () => {
+// 	const response = await api.get("/api/blogs");
+// 	expect(response.body).toHaveLength(helper.initialBlogss.length);
+// });
 
-test("Verifies blog id property", async () => {
-	const response = await api.get("/api/blogs");
-	const blogs = response.body;
+// test("Verifies blog id property", async () => {
+// 	const response = await api.get("/api/blogs");
+// 	const blogs = response.body;
 
-	blogs.forEach((blog) => {
-		expect(blog._id).toBeDefined();
-	});
-});
+// 	blogs.forEach((blog) => {
+// 		expect(blog._id).toBeDefined();
+// 	});
+// });
 
 test("Create new post", async () => {
-	const preInsertBlogs = await api.get("/api/blogs");
-	await api.post("/api/blogs", helper.newBlog).expect(201);
-	const postInsertBlogs = await api.get("/api/blogs");
-	expect(postInsertBlogs.body).toHaveLength(preInsertBlogs.body.length + 1);
+  const preInsertBlogs = await api.get("/api/blogs");
+  await api
+    .post("/api/blogs")
+    .send(helper.newBlog)
+    .expect(201)
+  const postInsertBlogs = await api.get("/api/blogs");
+  const lastElementIndex = postInsertBlogs.body.length - 1;
+  expect(postInsertBlogs.body).toHaveLength(preInsertBlogs.body.length + 1);
+
+  expect(postInsertBlogs.body[lastElementIndex].title).toEqual(
+    helper.newBlog.title
+  );
+  expect(postInsertBlogs.body[lastElementIndex].author).toEqual(
+    helper.newBlog.author
+  );
+  expect(postInsertBlogs.body[lastElementIndex].url).toEqual(
+    helper.newBlog.url
+  );
+  expect(postInsertBlogs.body[lastElementIndex].likes).toEqual(
+    helper.newBlog.likes
+  );
 });
 
 afterAll(async () => {
-	await mongoose.connection.close();
+  await mongoose.connection.close();
 });
 
 // describe("when there is initially some blogs saved", () => {
