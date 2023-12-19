@@ -12,75 +12,80 @@ beforeEach(async () => {
 	await Blog.insertMany(helper.initialBlogss);
 }, 50000);
 
-// test("blogs are returned as json", async () => {
-// 	await api
-// 		.get("/api/blogs")
-// 		.expect(200)
-// 		.expect("Content-Type", /application\/json/);
-// });
+describe("Valid Blogs Return", () => {
+	test("blogs are returned as json", async () => {
+		await api
+			.get("/api/blogs")
+			.expect(200)
+			.expect("Content-Type", /application\/json/);
+	});
 
-// test("All blogs are returned with current length", async () => {
-// 	const response = await api.get("/api/blogs");
-// 	expect(response.body).toHaveLength(helper.initialBlogss.length);
-// });
+	test("Blogs are returned with the correct length", async () => {
+		const response = await api.get("/api/blogs");
+		expect(response.body).toHaveLength(helper.initialBlogss.length);
+	});
 
-// test("Verifies blog id property", async () => {
-// 	const response = await api.get("/api/blogs");
-// 	const blogs = response.body;
-
-// 	blogs.forEach((blog) => {
-// 		expect(blog._id).toBeDefined();
-// 	});
-// });
-
-// test("Create new post and make sure the post appears on DB", async () => {
-// 	const preInsertBlogs = await api.get("/api/blogs");
-
-// 	await api
-// 		.post("/api/blogs")
-// 		.send(helper.newBlog)
-// 		.expect(201)
-// 		.expect("Content-Type", /application\/json/);
-
-// 	const postInsertBlogs = await api.get("/api/blogs");
-// 	expect(postInsertBlogs.body).toHaveLength(preInsertBlogs.body.length + 1);
-
-// 	const lastElementIndex = postInsertBlogs.body.length - 1;
-// 	expect(postInsertBlogs.body[lastElementIndex].title).toEqual(
-// 		helper.newBlog.title
-// 	);
-// 	expect(postInsertBlogs.body[lastElementIndex].author).toEqual(
-// 		helper.newBlog.author
-// 	);
-// 	expect(postInsertBlogs.body[lastElementIndex].url).toEqual(
-// 		helper.newBlog.url
-// 	);
-// 	expect(postInsertBlogs.body[lastElementIndex].likes).toEqual(
-// 		helper.newBlog.likes
-// 	);
-// });
-
-// test("Is Blog missing like property", async () => {
-// 	res = await api.post("/api/blogs").send(helper.missingLikesBlog);
-// 	expect(res.statusCode).toEqual(400);
-// 	expect(res.body.error).toContain("Must have likes feild");
-// });
-
-test("Blog missing title property", async () => {
-	res = await api.post("/api/blogs").send(helper.noTileBlog);
-	expect(res.statusCode).toEqual(400);
-	expect(res.body.error).toContain("validation failed");
+	test("Blogs have id property", async () => {
+		const response = await api.get("/api/blogs");
+		const blogs = response.body;
+		blogs.forEach((blog) => {
+			expect(blog._id).toBeDefined();
+		});
+	});
 });
 
-test("Blog missing url property", async () => {
-	res = await api.post("/api/blogs").send(helper.noUrlBlog);
-	expect(res.statusCode).toEqual(400);
-	expect(res.body.error).toContain("validation failed");
+describe("Addition of a new blog", () => {
+	test("Successful insert with valid data", async () => {
+		const preInsertBlogs = await api.get("/api/blogs");
+
+		await api
+			.post("/api/blogs")
+			.send(helper.newBlog)
+			.expect(201)
+			.expect("Content-Type", /application\/json/);
+
+		const postInsertBlogs = await api.get("/api/blogs");
+		expect(postInsertBlogs.body).toHaveLength(preInsertBlogs.body.length + 1);
+
+		const lastElementIndex = postInsertBlogs.body.length - 1;
+		expect(postInsertBlogs.body[lastElementIndex].title).toEqual(
+			helper.newBlog.title
+		);
+		expect(postInsertBlogs.body[lastElementIndex].author).toEqual(
+			helper.newBlog.author
+		);
+		expect(postInsertBlogs.body[lastElementIndex].url).toEqual(
+			helper.newBlog.url
+		);
+		expect(postInsertBlogs.body[lastElementIndex].likes).toEqual(
+			helper.newBlog.likes
+		);
+	});
+
+	test("Failed with missing likes", async () => {
+		res = await api.post("/api/blogs").send(helper.noLikesBlog);
+		expect(res.statusCode).toEqual(400);
+		expect(res.body.error).toContain("validation failed");
+	});
+
+	test("Failed with missing title", async () => {
+		res = await api.post("/api/blogs").send(helper.noTileBlog);
+		expect(res.statusCode).toEqual(400);
+		expect(res.body.error).toContain("validation failed");
+	});
+
+	test("Failed with missing url", async () => {
+		res = await api.post("/api/blogs").send(helper.noUrlBlog);
+		expect(res.statusCode).toEqual(400);
+		expect(res.body.error).toContain("validation failed");
+	});
 });
 
 afterAll(async () => {
 	await mongoose.connection.close();
 });
+
+// OLD tests
 
 // describe("when there is initially some blogs saved", () => {
 // 	beforeEach(async () => {

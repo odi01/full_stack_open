@@ -9,12 +9,12 @@ const blogSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	url: {
-		type: String,
-		required: true,
-	},
 	likes: {
 		type: Number,
+		required: true,
+	},
+	url: {
+		type: String,
 		required: true,
 	},
 });

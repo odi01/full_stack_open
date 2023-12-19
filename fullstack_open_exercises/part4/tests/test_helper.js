@@ -26,7 +26,7 @@ const newBlog = {
 	likes: 69,
 };
 
-const missingLikesBlog = {
+const noLikesBlog = {
 	title: "In the begaining I didn't have a like prop",
 	author: "Bro Mo",
 	url: "http://www.not22hing-there.com",
@@ -60,7 +60,7 @@ const noUrlBlog = {
 module.exports = {
 	initialBlogss,
 	newBlog,
-	missingLikesBlog,
+	noLikesBlog,
 	noTileBlog,
 	noUrlBlog,
 };
