@@ -23,13 +23,25 @@ const newBlog = {
 	title: "Farting in the dark is good",
 	author: "Michal Ribinzon",
 	url: "http://www.nothing-there.com",
-	likes: 69
+	likes: 69,
 };
 
 const missingLikesBlog = {
 	title: "In the begaining I didn't have a like prop",
 	author: "Bro Mo",
 	url: "http://www.not22hing-there.com",
+};
+
+const noTileBlog = {
+	author: "Bro Mo",
+	url: "http://www.not22hing-there.com",
+	likes: 2,
+};
+
+const noUrlBlog = {
+	title: "In the begaining I didn't have a like prop",
+	author: "Bro Mo",
+	likes: 2,
 };
 
 // const nonExistingId = async () => {
@@ -48,7 +60,9 @@ const missingLikesBlog = {
 module.exports = {
 	initialBlogss,
 	newBlog,
-	missingLikesBlog
+	missingLikesBlog,
+	noTileBlog,
+	noUrlBlog,
 };
 
 // module.exports = {
