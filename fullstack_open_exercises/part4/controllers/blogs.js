@@ -31,8 +31,32 @@ blogsRouter.get("/:id", async (request, response, next) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-	await Blog.findByIdAndDelete(request.params.id);
-	response.status(204).end();
+	try {
+		await Blog.findByIdAndDelete(request.params.id);
+		response.status(204).end();
+	} catch (error) {
+		console.error("Failed to delete:", error.message);
+		response.status(400).json({ error: error.message });
+	}
+});
+
+blogsRouter.put("/:id", async (request, response) => {
+	const blog = {
+		likes: request.body.likes,
+	};
+
+	try {
+		updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+			new: true,
+		});
+		if (updatedBlog === null || updatedBlog === undefined) {
+			throw new Error("Blog not exists");
+		}
+		response.status(201).json(updatedBlog);
+	} catch (error) {
+		console.error("Failed to update blog:", error.message);
+		response.status(400).json({ error: error.message });
+	}
 });
 
 module.exports = blogsRouter;
