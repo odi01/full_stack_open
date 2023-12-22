@@ -59,4 +59,31 @@ usersRouter.delete("/:id", async (request, response) => {
   }
 });
 
+usersRouter.patch("/:id", async (request, response) => {
+  try {
+    const { blogs } = request.body;
+
+    if (!blogs) {
+      const errMsg = "`blogs` field is required for update";
+      console.error("Validation error:", errMsg);
+      response.status(400).json({ error: errMsg });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      request.params.id,
+      { blogs },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedUser) {
+      response.status(404).json({ error: "user not found" });
+    }
+
+    response.json(updatedUser);
+  } catch (error) {
+    console.error("Failed to update:", error.message);
+    response.status(400).json({ error: error.message });
+  }
+});
+
 module.exports = usersRouter;
