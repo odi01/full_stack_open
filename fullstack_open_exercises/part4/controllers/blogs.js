@@ -13,12 +13,8 @@ blogsRouter.post("/", async (request, response) => {
 	//   console.log("Adding likes property equal to: 0");
 	//   request.body["likes"] = 0;
 	// }
-	const decodedToken = jwt.verify(request.token, process.env.SECRET);
-	if (!decodedToken.id) {
-		return response.status(401).json({ error: "token invalid" });
-	}
 	try {
-		const user = await User.findById(decodedToken.id);
+		const user = request.user;
 
 		request.body.user = user._id;
 		const blog = new Blog(request.body);
@@ -45,14 +41,10 @@ blogsRouter.get("/:id", async (request, response, next) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-	const decodedToken = jwt.verify(request.token, process.env.SECRET);
-	if (!decodedToken.id) {
-		return response.status(401).json({ error: "token invalid" });
-	}
-
 	try {
 		const blog = await Blog.findById(request.params.id);
-		if (blog.user.toString() !== decodedToken.id.toString()) {
+
+		if (blog.user.toString() !== request.user.id.toString()) {
 			return response.status(403).json({ error: "no permissions" });
 		}
 
