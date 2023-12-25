@@ -3,14 +3,6 @@ const Blog = require("../models/blog");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
-const getTokenFrom = (request) => {
-	const authorization = request.get("authorization");
-	if (authorization && authorization.startsWith("Bearer ")) {
-		return authorization.replace("Bearer ", "");
-	}
-	return null;
-};
-
 blogsRouter.get("/", async (request, response) => {
 	const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
 	response.json(blogs);
@@ -21,7 +13,7 @@ blogsRouter.post("/", async (request, response) => {
 	//   console.log("Adding likes property equal to: 0");
 	//   request.body["likes"] = 0;
 	// }
-	const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+	const decodedToken = jwt.verify(request.token, process.env.SECRET);
 	if (!decodedToken.id) {
 		return response.status(401).json({ error: "token invalid" });
 	}
@@ -32,7 +24,7 @@ blogsRouter.post("/", async (request, response) => {
 		const blog = new Blog(request.body);
 		const savedBlog = await blog.save();
 
-		// Save the blog id to the user object
+		// Add the blog id to the user object
 		user.blogs = user.blogs.concat(savedBlog._id);
 		await user.save();
 
